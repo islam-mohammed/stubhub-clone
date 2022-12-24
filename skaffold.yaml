@@ -1,7 +1,9 @@
-apiVersion: skaffold/v4beta1
+apiVersion: skaffold/v2alpha3
 kind: Config
-metadata:
-  name: stubhub-clone
+deploy:
+  kubectl:
+    manifests:
+      - ./infra/k8s/*
 build:
   local:
     push: false
@@ -10,7 +12,7 @@ build:
       context: auth
       docker:
         dockerfile: Dockerfile
-manifests:
-  rawYaml:
-    - infra/k8s/auth.yaml
-    - infra/k8s/ingress.yaml
+      sync:
+        manual:
+          - dest: .
+            src: "**/*.ts"
