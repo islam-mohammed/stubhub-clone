@@ -1,0 +1,16 @@
+apiVersion: skaffold/v4beta1
+kind: Config
+metadata:
+  name: stubhub-clone
+build:
+  local:
+    push: false
+  artifacts:
+    - image: islam1978/auth
+      context: auth
+      docker:
+        dockerfile: Dockerfile
+manifests:
+  rawYaml:
+    - infra/k8s/auth.yaml
+    - infra/k8s/ingress.yaml
