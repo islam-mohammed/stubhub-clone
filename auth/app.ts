@@ -6,7 +6,7 @@ import authRouter from "./src/routes/routes";
 const app = express();
 app.use(json());
 app.use(helmet());
-app.use("/users/api", authRouter);
+app.use("/api/users", authRouter);
 
 app.get("/*", (req, res) => {
   return res.status(404).json({ message: "resource not found" });

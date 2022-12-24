@@ -3,6 +3,7 @@ import express from "express";
 const authRouter = express.Router();
 
 authRouter.get("/current", (req, res) => {
+  console.log("current");
   return res.send("Get Crurrent User!");
 });
 authRouter.post("/create", (req, res) => {
