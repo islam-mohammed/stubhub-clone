@@ -32,3 +32,36 @@ spec:
       targetPort: 3000
       protocol: TCP
       name: auth
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-db-depl
+spec:
+  selector:
+    matchLabels:
+      app: auth-db
+  template:
+    metadata:
+      labels:
+        app: auth-db
+    spec:
+      containers:
+        - name: auth-db
+          image: mongo
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "1000m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-db-srv
+spec:
+  selector:
+    app: auth-db
+  ports:
+    - port: 27017
+      targetPort: 27017
+      protocol: TCP
