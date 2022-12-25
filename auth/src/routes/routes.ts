@@ -1,9 +1,9 @@
 import express, { Request, Response } from "express";
 import { body, validationResult } from "express-validator";
+import { sigunUp } from "../services/auth.service";
 import RequestValidationError from "../errors/request-validation-error";
 
 const authRouter = express.Router();
-
 authRouter.get("/current", (req, res) => {
   return res.send("Get Crurrent User!");
 });
@@ -20,13 +20,14 @@ authRouter.post(
         "Password must at least contains 8 characters, 1 upper case, 1 lower case, and 1 number"
       ),
   ],
-  (req: Request, res: Response) => {
+  async (req: Request, res: Response) => {
     const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      throw new RequestValidationError(errors.array());
-    }
-    const { email, password } = req.body;
-    return res.send("Create New User!");
+    // if (!errors.isEmpty()) {
+    //   throw new RequestValidationError(errors.array());
+    // }
+    const user = await sigunUp(req.body);
+
+    return res.status(201).json(user);
   }
 );
 authRouter.post("/signin", (req, res) => {

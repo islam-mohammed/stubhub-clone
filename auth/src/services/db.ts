@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import DatabaseConnectionError from "../errors/database-connection-error";
 
 mongoose.connection
   .once("open", () => console.log("MongoDB connection ready!"))
@@ -9,7 +10,7 @@ async function dbConnect() {
   try {
     await mongoose.connect("mongodb://auth-db-srv/auth");
   } catch (error) {
-    console.log(error);
+    throw new DatabaseConnectionError();
   }
 }
 
