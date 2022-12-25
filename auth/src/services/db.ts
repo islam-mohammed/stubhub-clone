@@ -6,7 +6,11 @@ mongoose.connection
 mongoose.set("strictQuery", false);
 
 async function dbConnect() {
-  await mongoose.connect("mongodb://auth-db-srv/auth");
+  try {
+    await mongoose.connect("mongodb://auth-db-srv/auth");
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 export default dbConnect;
