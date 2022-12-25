@@ -11,10 +11,14 @@ authRouter.post(
   "/signup",
   [
     body("email").isEmail().withMessage("Email is not valid"),
+    body("firstName").not().isEmpty().withMessage("First name is required"),
+    body("lastName").not().isEmpty().withMessage("Last name is required"),
     body("password")
       .trim()
-      .isLength({ min: 4, max: 20 })
-      .withMessage("Password must be between 4 and 10 characters"),
+      .matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/)
+      .withMessage(
+        "Password must at least contains 8 characters, 1 upper case, 1 lower case, and 1 number"
+      ),
   ],
   (req: Request, res: Response) => {
     const errors = validationResult(req);
