@@ -9,16 +9,13 @@ const sigunUp = async (user: IUser) => {
     throw new BadRequestError("Email in use");
   }
   const newUser: UserDocument = await User.create(user);
-  const jwtUser = sign(
-    {
-      id: newUser.id,
-      name: `${newUser.firstName} ${newUser.lastName}`,
-      email: newUser.email,
-    },
-    process.env.JWT_SECRET!
-  );
 
-  return jwtUser;
+  const jwt = sign(newUser.toObject(), process.env.JWT_SECRET!);
+
+  return {
+    jwt,
+    user: newUser,
+  };
 };
 
 export { sigunUp };

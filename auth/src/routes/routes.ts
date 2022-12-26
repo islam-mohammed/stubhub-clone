@@ -27,11 +27,10 @@ authRouter.post(
     }
     const jwtUser = await sigunUp(req.body);
     req.session = {
-      ...req.session,
-      jwt: jwtUser,
+      jwt: jwtUser.jwt,
     };
 
-    return res.status(201).json(jwtUser);
+    return res.status(201).json(jwtUser.user);
   }
 );
 authRouter.post("/signin", (req, res) => {

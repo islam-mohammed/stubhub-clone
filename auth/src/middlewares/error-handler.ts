@@ -15,7 +15,7 @@ const errorHandler = (
     status: "Error",
     errors: [
       {
-        message: "Something went wrong!",
+        message: err.message,
       },
     ],
   };
