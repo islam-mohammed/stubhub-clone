@@ -22,12 +22,16 @@ authRouter.post(
   ],
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
-    // if (!errors.isEmpty()) {
-    //   throw new RequestValidationError(errors.array());
-    // }
-    const user = await sigunUp(req.body);
+    if (!errors.isEmpty()) {
+      throw new RequestValidationError(errors.array());
+    }
+    const jwtUser = await sigunUp(req.body);
+    req.session = {
+      ...req.session,
+      jwt: jwtUser,
+    };
 
-    return res.status(201).json(user);
+    return res.status(201).json(jwtUser);
   }
 );
 authRouter.post("/signin", (req, res) => {

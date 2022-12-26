@@ -15,6 +15,12 @@ spec:
       containers:
         - name: auth
           image: islam1978/auth
+          env:
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: jwq-secret
+                  key: JWT_KEY
           resources:
             limits:
               memory: "512Mi"
