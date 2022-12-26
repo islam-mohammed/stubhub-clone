@@ -4,6 +4,7 @@ import { signIn, sigunUp } from "../services/auth.service";
 import RequestValidator from "../middlewares/request-validator";
 import { verify } from "jsonwebtoken";
 import CurrentUser from "../middlewares/current-user";
+import Auth from "../middlewares/auth";
 const authRouter = express.Router();
 
 authRouter.post(
@@ -51,7 +52,7 @@ authRouter.post(
   }
 );
 
-authRouter.get("/current", CurrentUser, (req: Request, res: Response) => {
+authRouter.get("/current", CurrentUser, Auth, (req: Request, res: Response) => {
   return res.json({
     currentUser: req.currentUser,
   });
