@@ -18,4 +18,11 @@ const sigunUp = async (user: IUser) => {
   };
 };
 
-export { sigunUp };
+const signIn = async (email: string, password: string) => {
+  const existingUser = await User.findOne({ email });
+  if (!existingUser) {
+    throw new BadRequestError("Email in use");
+  }
+};
+
+export { sigunUp, signIn };
