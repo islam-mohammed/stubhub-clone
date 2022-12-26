@@ -2,11 +2,8 @@ import express, { Request, Response } from "express";
 import { body } from "express-validator";
 import { signIn, sigunUp } from "../services/auth.service";
 import RequestValidator from "../middlewares/request-validator";
-
+import { verify } from "jsonwebtoken";
 const authRouter = express.Router();
-authRouter.get("/current", (req, res) => {
-  return res.send("Get Crurrent User!");
-});
 
 authRouter.post(
   "/signup",
@@ -52,6 +49,25 @@ authRouter.post(
     return res.status(200).json(jwtUser.user);
   }
 );
+
+authRouter.get("/current", (req, res) => {
+  if (!req.session?.jwt) {
+    return res.json({
+      currentUser: null,
+    });
+  }
+  try {
+    const currentUser = verify(req.session.jwt, process.env.JWT_SECRET!);
+    res.status(200).json({
+      currentUser,
+    });
+  } catch (error) {
+    return res.json({
+      currentUser: null,
+    });
+  }
+});
+
 authRouter.post("/signout", (req, res) => {
   return res.send("Handle user signout!");
 });

@@ -29,6 +29,7 @@ const signIn = async (email: string, password: string) => {
     throw new BadRequestError("Invalid email or password");
   }
 
+  console.log(existingUser.toObject());
   const jwt = sign(existingUser.toObject(), process.env.JWT_SECRET!);
 
   return {
