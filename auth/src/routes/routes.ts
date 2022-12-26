@@ -2,7 +2,6 @@ import express, { Request, Response } from "express";
 import { body } from "express-validator";
 import { signIn, sigunUp } from "../services/auth.service";
 import RequestValidator from "../middlewares/request-validator";
-import { verify } from "jsonwebtoken";
 import CurrentUser from "../middlewares/current-user";
 import Auth from "../middlewares/auth";
 const authRouter = express.Router();
