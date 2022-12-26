@@ -3,6 +3,7 @@ import { body } from "express-validator";
 import { signIn, sigunUp } from "../services/auth.service";
 import RequestValidator from "../middlewares/request-validator";
 import { verify } from "jsonwebtoken";
+import CurrentUser from "../middlewares/current-user";
 const authRouter = express.Router();
 
 authRouter.post(
@@ -50,22 +51,10 @@ authRouter.post(
   }
 );
 
-authRouter.get("/current", (req, res) => {
-  if (!req.session?.jwt) {
-    return res.json({
-      currentUser: null,
-    });
-  }
-  try {
-    const currentUser = verify(req.session.jwt, process.env.JWT_SECRET!);
-    res.status(200).json({
-      currentUser,
-    });
-  } catch (error) {
-    return res.json({
-      currentUser: null,
-    });
-  }
+authRouter.get("/current", CurrentUser, (req: Request, res: Response) => {
+  return res.json({
+    currentUser: req.currentUser,
+  });
 });
 
 authRouter.post("/signout", (req, res) => {
