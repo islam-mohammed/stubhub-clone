@@ -2,8 +2,7 @@ import IResponse from "../models/response";
 import CustomError from "./custom-error";
 
 export default class BadRequestError extends CustomError {
-  statusCode = 400;
-  constructor(message: string) {
+  constructor(message: string, public statusCode = 400) {
     super(message);
   }
   serializeError(): IResponse {

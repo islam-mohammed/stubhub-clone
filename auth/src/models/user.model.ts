@@ -1,5 +1,5 @@
 import { model, Schema, Model, Document } from "mongoose";
-import { hash, compare } from "bcrypt";
+import { hash, genSalt } from "bcrypt";
 
 export interface IUser {
   email: string;
@@ -31,7 +31,9 @@ const UserSchema: Schema = new Schema(
 
 UserSchema.pre("save", async function (Done) {
   if (this.isModified("password")) {
-    const hashed = await hash(this.get("password"), 10);
+    const saltRounds = 10;
+    const salt = await genSalt(saltRounds);
+    const hashed = await hash(this.get("password"), salt);
     this.set("password", hashed);
   }
   Done();

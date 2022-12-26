@@ -7,6 +7,7 @@ const RequestValidator = (req: Request, res: Response, next: NextFunction) => {
   if (!errors.isEmpty()) {
     throw new RequestValidationError(errors.array());
   }
+  next();
 };
 
 export default RequestValidator;

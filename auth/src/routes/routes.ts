@@ -1,7 +1,6 @@
 import express, { Request, Response } from "express";
-import { body, validationResult } from "express-validator";
+import { body } from "express-validator";
 import { signIn, sigunUp } from "../services/auth.service";
-import RequestValidationError from "../errors/request-validation-error";
 import RequestValidator from "../middlewares/request-validator";
 
 const authRouter = express.Router();
@@ -35,8 +34,8 @@ authRouter.post(
 
 authRouter.post(
   "/signin",
-  [body("email").not().isEmpty().withMessage("Please enter your email")],
   [
+    body("email").not().isEmpty().withMessage("Please enter your email"),
     body("password")
       .trim()
       .not()
@@ -44,11 +43,13 @@ authRouter.post(
       .withMessage("Please enter your password"),
   ],
   RequestValidator,
-  (req: Request, res: Response) => {
+  async (req: Request, res: Response) => {
     const { email, password } = req.body;
-    signIn(email, password);
-
-    return res.send("Handle user sign in!");
+    const jwtUser = await signIn(email, password);
+    req.session = {
+      jwt: jwtUser.jwt,
+    };
+    return res.status(200).json(jwtUser.user);
   }
 );
 authRouter.post("/signout", (req, res) => {

@@ -19,7 +19,7 @@ const errorHandler = (
       },
     ],
   };
-  return res.status(400).json(response);
+  res.status(400).json(response);
 };
 
 export default errorHandler;
