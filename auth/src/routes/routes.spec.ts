@@ -2,23 +2,10 @@ import request from "supertest";
 import app from "../../app";
 describe("Signup Route Tests", () => {
   it("Should return a 201 on successful signup", async () => {
-    return request(app)
-      .post("/api/users/signup")
-      .send({
-        email: "test@test.com",
-        firstName: "first",
-        lastName: "last",
-        password: "Iaaaanm7@",
-      })
-      .expect(201);
+    return getAuthCookie();
   });
   it("Should return a 400 if the Email is used", async () => {
-    await request(app).post("/api/users/signup").send({
-      email: "test@test.com",
-      firstName: "first",
-      lastName: "last",
-      password: "Iaaaanm7@",
-    });
+    await getAuthCookie();
     return request(app)
       .post("/api/users/signup")
       .send({
@@ -74,56 +61,27 @@ describe("Signup Route Tests", () => {
       .expect(400);
   });
   it("should set a cookie after successful signup", async () => {
-    const res = await request(app).post("/api/users/signup").send({
-      email: "new@email.com",
-      firstName: "Islam",
-      lastName: "last",
-      password: "Iaaaanm7A@",
-    });
-    expect(res.get("Set-Cookie")).toBeDefined();
+    const cookie = await getAuthCookie();
+    expect(cookie).toBeDefined();
   });
 });
+
 describe("Signin Route Tests", () => {
   it("Should return a 200 if on success sign in", async () => {
-    await request(app).post("/api/users/signup").send({
-      email: "test@test.com",
-      firstName: "first",
-      lastName: "last",
-      password: "Iaaaanm7@",
-    });
+    await getAuthCookie();
     return request(app)
       .post("/api/users/signin")
       .send({
         email: "test@test.com",
-        password: "Iaaaanm7@",
-      })
-      .expect(200);
-  });
-  it("Should return a 200 if on success sign in", async () => {
-    await request(app).post("/api/users/signup").send({
-      email: "test@test.com",
-      firstName: "first",
-      lastName: "last",
-      password: "Iaaaanm7@",
-    });
-    await request(app)
-      .post("/api/users/signin")
-      .send({
-        email: "test@test.com",
-        password: "Iaaaanm7@",
+        password: "newPa$$0rd",
       })
       .expect(200);
   });
   it("Should set cookie after success sign in", async () => {
-    await request(app).post("/api/users/signup").send({
-      email: "test@test.com",
-      firstName: "first",
-      lastName: "last",
-      password: "Iaaaanm7@",
-    });
+    await getAuthCookie();
     const res = await request(app).post("/api/users/signin").send({
       email: "test@test.com",
-      password: "Iaaaanm7@",
+      password: "newPa$$0rd",
     });
     expect(res.get("Set-Cookie")).toBeDefined();
   });
@@ -161,14 +119,7 @@ describe("Sign Out Route Tests", () => {
     const res = request(app).post("/api/users/signout").send().expect(200);
   });
   it("Should reset the cookie on success sign out", async () => {
-    const authResponse = await request(app).post("/api/users/signup").send({
-      email: "test@test.com",
-      firstName: "first",
-      lastName: "last",
-      password: "Iaaaanm7@",
-    });
-
-    const cookie = authResponse.get("Set-Cookie");
+    const cookie = await getAuthCookie();
     const req = await request(app)
       .post("/api/users/signout")
       .set("Cookie", cookie)
@@ -178,6 +129,7 @@ describe("Sign Out Route Tests", () => {
     );
   });
 });
+
 describe("Current User Route Tests", () => {
   it("Should respond with details about the current user", async () => {
     const authResponse = await request(app)

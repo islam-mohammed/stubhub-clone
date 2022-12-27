@@ -1,3 +1,4 @@
+import request from "supertest";
 import mongoose from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import app from "../../app";
@@ -21,3 +22,22 @@ afterAll(async () => {
   await mongo.stop();
   await mongoose.connection.close();
 });
+
+global.getAuthCookie = async () => {
+  const email = "test@test.com";
+  const password = "newPa$$0rd";
+  const firstName = "fname";
+  const lastName = "lname";
+
+  const response = await request(app)
+    .post("/api/users/signup")
+    .send({
+      email,
+      password,
+      firstName,
+      lastName,
+    })
+    .expect(201);
+  const cookie = response.get("Set-Cookie");
+  return cookie;
+};
