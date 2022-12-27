@@ -1,8 +1,6 @@
-import { response } from "express";
-import { expectCt } from "helmet";
 import request from "supertest";
 import app from "../../app";
-describe("Signup Route", () => {
+describe("Signup Route Tests", () => {
   it("Should return a 201 on successful signup", async () => {
     return request(app)
       .post("/api/users/signup")
@@ -83,5 +81,77 @@ describe("Signup Route", () => {
       password: "Iaaaanm7A@",
     });
     expect(res.get("Set-Cookie")).toBeDefined();
+  });
+});
+describe("Signin Route Tests", () => {
+  it("Should return a 200 if on success sign in", async () => {
+    await request(app).post("/api/users/signup").send({
+      email: "test@test.com",
+      firstName: "first",
+      lastName: "last",
+      password: "Iaaaanm7@",
+    });
+    return request(app)
+      .post("/api/users/signin")
+      .send({
+        email: "test@test.com",
+        password: "Iaaaanm7@",
+      })
+      .expect(200);
+  });
+  it("Should return a 200 if on success sign in", async () => {
+    await request(app).post("/api/users/signup").send({
+      email: "test@test.com",
+      firstName: "first",
+      lastName: "last",
+      password: "Iaaaanm7@",
+    });
+    await request(app)
+      .post("/api/users/signin")
+      .send({
+        email: "test@test.com",
+        password: "Iaaaanm7@",
+      })
+      .expect(200);
+  });
+  it("Should set cookie after success sign in", async () => {
+    await request(app).post("/api/users/signup").send({
+      email: "test@test.com",
+      firstName: "first",
+      lastName: "last",
+      password: "Iaaaanm7@",
+    });
+    const res = await request(app).post("/api/users/signin").send({
+      email: "test@test.com",
+      password: "Iaaaanm7@",
+    });
+    expect(res.get("Set-Cookie")).toBeDefined();
+  });
+  it("Should return 404 code if the email is not exist", async () => {
+    return request(app)
+      .post("/api/users/signin")
+      .send({
+        email: "test@test.com",
+        password: "Iaaaanm7@",
+      })
+      .expect(404);
+  });
+  it("Should return 400 code if the email is not provided", async () => {
+    return request(app)
+      .post("/api/users/signin")
+      .send({
+        email: "",
+        password: "Iaaaanm7@",
+      })
+      .expect(400);
+  });
+  it("Should return 400 code if the password is not provided", async () => {
+    return request(app)
+      .post("/api/users/signin")
+      .send({
+        email: "islam@mail.com",
+        password: "",
+      })
+      .expect(400);
   });
 });
