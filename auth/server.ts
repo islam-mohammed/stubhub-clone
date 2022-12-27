@@ -1,7 +1,6 @@
 import http from "http";
 import app from "./app";
 import dbConnect from "./src/services/db";
-
 if (!process.env.JWT_SECRET) {
   throw new Error("JWT_SECRET is not defined!");
 }

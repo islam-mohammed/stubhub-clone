@@ -15,7 +15,7 @@ app.set("trust proxy", true); // trust ingress (broxy)
 app.use(
   cookieSession({
     signed: false, // disable encryption
-    secure: true, // used only with secured connection
+    secure: process.env.NODE_ENV === "test" ? false : true, // used only with secured connection
   })
 );
 
