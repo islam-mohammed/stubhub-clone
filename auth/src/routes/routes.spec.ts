@@ -155,3 +155,22 @@ describe("Signin Route Tests", () => {
       .expect(400);
   });
 });
+
+describe("Sign Out Route Tests", () => {
+  it("Should return a 200 status code on success sign out", async () => {
+    const res = request(app).post("/api/users/signout").expect(200);
+  });
+  it("Should reset the cookie on success sign out", async () => {
+    await request(app).post("/api/users/signup").send({
+      email: "test@test.com",
+      firstName: "first",
+      lastName: "last",
+      password: "Iaaaanm7@",
+    });
+    const req = await request(app).post("/api/users/signout");
+    console.log(req.get("Set-Cookie"));
+    expect(req.get("Set-Cookie")[0]).toEqual(
+      "session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; httponly"
+    );
+  });
+});
