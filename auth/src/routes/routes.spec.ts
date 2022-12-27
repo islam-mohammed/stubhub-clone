@@ -154,4 +154,10 @@ describe("Current User Route Tests", () => {
     expect(response.body.currentUser.id).toBeDefined();
     expect(response.body.currentUser.password).toBeUndefined();
   });
+  it("Should respond with null if there is not authinticated", async () => {
+    const response = await request(app)
+      .get("/api/users/current")
+      .send()
+      .expect(401);
+  });
 });
