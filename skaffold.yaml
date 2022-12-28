@@ -16,3 +16,11 @@ build:
         manual:
           - dest: .
             src: "**/*.ts"
+    - image: islam1978/stubhub-client
+      context: client
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - dest: .
+            src: "**/*.{ts,tsx,scss}"

@@ -16,11 +16,13 @@ export default function Layout({ children, title = "Stub Hub | Home" }: Props) {
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <header>
-        <Navbar />
-      </header>
-      <main>{children}</main>
-      <Footer />
+      <div className="w-full flex flex-col leading-6">
+        <header>
+          <Navbar />
+        </header>
+        <main>{children}</main>
+        <Footer />
+      </div>
     </div>
   );
 }
