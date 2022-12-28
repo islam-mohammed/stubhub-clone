@@ -1,16 +1,53 @@
-/** @type {import('tailwindcss').Config} */
+/**
+ * @type {import('@types/tailwindcss/tailwind-config').TailwindConfig}
+ */
 const colors = require("tailwindcss/colors");
 module.exports = {
   content: [
+    "./node_modules/flowbite/**/*.js",
+    "./node_modules/flowbite-react/**/*.js",
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
+    "./public/**/*.html",
   ],
   darkMode: "class",
   theme: {
     extend: {},
     colors: {
       ...colors,
+      primary: "#264653",
+      primaryContrast: "#ffffff",
+      primaryShade: "#213e49",
+      primaryTint: "#3c5964",
+      secondary: "#2A9D8F",
+      secondaryContrast: "#ffffff",
+      secondaryShade: "#258a7e",
+      secondaryTint: "#3fa79a",
+      tertiary: "#E9C46A",
+      tertiaryContrast: "#000000",
+      tertiaryShade: "#cdac5d",
+      tertiaryTint: "#ebca79",
+      success: "#2dd36f",
+      successContrast: "#000000",
+      successShade: "#28ba62",
+      successTint: "#42d77d",
+      warning: "#F4A261",
+      warningContrast: "#000000",
+      warningShade: "#d78f55",
+      warningTint: "#f5ab71",
+      danger: "#eb445a",
+      dangerContrast: "#ffffff",
+      dangerShade: "#cf3c4f",
+      dangerTint: "#ed576b",
+      medium: "#E76F51",
+      mediumContrast: "#000000",
+      mediumShade: "#cb6247",
+      mediumTint: "#e97d62",
+      light: "#f4f5f8",
+      lightContrast: "#000000",
+      lightShade: "#d7d8da",
+      lightTint: "#f5f6f9",
     },
   },
-  plugins: [],
+  plugins: [require("flowbite/plugin")],
 };
