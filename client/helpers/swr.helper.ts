@@ -1,6 +1,6 @@
 export const getSWRCacheKey = () => {
   return {
-    user: () => `user`,
+    user: `user`,
   };
 };
 

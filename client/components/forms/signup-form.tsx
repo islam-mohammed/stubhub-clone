@@ -1,14 +1,18 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import User from "../../models/user";
-import * as Yup from "yup";
 import { TextInput, Button, Spinner } from "flowbite-react";
 import classNames from "../../helpers/class-names.helper";
 import { MailIcon, LockClosedIcon } from "@heroicons/react/solid";
 
 import LoginHeader from "./login-header";
 import { userServcie } from "../../services/user.service";
-import Errors from "../../models/error";
+import { useSWRConfig } from "swr";
+import getSWRCacheKey from "../../helpers/swr.helper";
+
+import { Error } from "../../models/error";
+import { useRouter } from "next/router";
+import { clientValidation } from "../../helpers/client-validation.helper";
 
 const initialValues: User = {
   email: "",
@@ -22,26 +26,9 @@ interface PageProps {
 }
 
 const SignupForm = ({ toggleForm }: PageProps) => {
-  const url: string = `${process.env.NEXT_PUBLIC_API_BASE_URL}/users/signup`;
-
-  const validationSchema = Yup.object().shape({
-    firstName: Yup.string()
-      .max(15, "Must be 15 characters or less")
-      .required("First name is required"),
-    lastName: Yup.string()
-      .max(20, "Must be 20 characters or less")
-      .required("Last name is required"),
-    email: Yup.string()
-      .email("Invalid email address")
-      .required("Email is required"),
-    password: Yup.string()
-      .trim()
-      .matches(
-        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-        "Password must at least contains 8 characters, 1 upper case, 1 lower case, and 1 number"
-      )
-      .required("Password is required"),
-  });
+  const { mutate } = useSWRConfig();
+  const router = useRouter();
+  const validationSchema = clientValidation.validationMessages.signUp;
   const formOptions = { resolver: yupResolver(validationSchema) };
   const { register, handleSubmit, setError, formState } =
     useForm<User>(formOptions);
@@ -49,13 +36,19 @@ const SignupForm = ({ toggleForm }: PageProps) => {
 
   async function onSubmit(user: User) {
     try {
-      const result = await userServcie.signUp(url, user);
-    } catch (e) {
-      setError(
-        "email",
-        { message: "This email in use!", type: "focus" },
-        { shouldFocus: true }
-      );
+      const result = await userServcie.signUp(user);
+      mutate(getSWRCacheKey().user, result);
+      router.push("/");
+    } catch (e: any) {
+      e.errors.forEach((error: Error) => {
+        if (error.field) {
+          setError(
+            error.field,
+            { message: error.message },
+            { shouldFocus: true }
+          );
+        }
+      });
     }
   }
 
