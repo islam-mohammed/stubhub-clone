@@ -5,8 +5,13 @@ import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
 
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import classNames from "../../helpers/class-names.helper";
+import Link from "next/link";
 
-export default function Navbar() {
+interface Props {
+  onSignout: () => void;
+}
+
+export default function Navbar({ onSignout }: Props) {
   return (
     <Disclosure as="nav" className="bg-white shadow">
       {({ open }) => (
@@ -105,7 +110,7 @@ export default function Navbar() {
                   <span className="sr-only">View notifications</span>
                   <BellIcon className="h-6 w-6" aria-hidden="true" />
                 </button>
-
+                <Link href="/secure/login">Sign in</Link>
                 {/* Profile dropdown */}
                 <Menu as="div" className="ml-4 relative flex-shrink-0">
                   <div>
@@ -159,11 +164,11 @@ export default function Navbar() {
                       <Menu.Item>
                         {({ active }) => (
                           <a
-                            href="#"
                             className={classNames(
                               active ? "bg-gray-100" : "",
                               "block px-4 py-2 text-sm text-gray-700"
                             )}
+                            onClick={onSignout}
                           >
                             Sign out
                           </a>
@@ -235,6 +240,7 @@ export default function Navbar() {
                   <BellIcon className="h-6 w-6" aria-hidden="true" />
                 </button>
               </div>
+              <Link href="/secure/login">Sign in</Link>
               <div className="mt-3 space-y-1">
                 <Disclosure.Button
                   as="a"
@@ -251,8 +257,8 @@ export default function Navbar() {
                   Settings
                 </Disclosure.Button>
                 <Disclosure.Button
-                  as="a"
-                  href="#"
+                  as="button"
+                  onClick={onSignout}
                   className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
                 >
                   Sign out

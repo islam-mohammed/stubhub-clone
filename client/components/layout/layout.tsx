@@ -2,13 +2,27 @@ import Head from "next/head";
 import { ReactNode } from "react";
 import Footer from "./footer";
 import Navbar from "./nav";
-
+import { useSWRConfig } from "swr";
+import { useRouter } from "next/router";
+import getSWRCacheKey from "../../helpers/swr.helper";
+import { userServcie } from "../../services/user.service";
 type Props = {
   children?: ReactNode;
   title?: string;
 };
 
 export default function Layout({ children, title = "Stub Hub | Home" }: Props) {
+  const { mutate } = useSWRConfig();
+  const router = useRouter();
+  const handleSignout = async () => {
+    try {
+      await userServcie.signOut();
+      mutate(getSWRCacheKey().user, null);
+      router.push("/");
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <div>
       <Head>
@@ -18,7 +32,7 @@ export default function Layout({ children, title = "Stub Hub | Home" }: Props) {
       </Head>
       <div className="w-full flex flex-col leading-6">
         <header>
-          <Navbar />
+          <Navbar onSignout={handleSignout} />
         </header>
         <main>{children}</main>
         <Footer />
