@@ -59,7 +59,8 @@ authRouter.get("/current", CurrentUser, Auth, (req: Request, res: Response) => {
 
 authRouter.post("/signout", (req, res) => {
   req.session = null;
-  res.json({
+  req.currentUser = null;
+  res.status(200).json({
     currentUser: null,
   });
 });

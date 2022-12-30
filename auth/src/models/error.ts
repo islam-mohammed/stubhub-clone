@@ -1,5 +1,5 @@
 export default interface IError {
   message: string;
-  filed?: string;
+  field?: string;
   stack?: string | undefined;
 }

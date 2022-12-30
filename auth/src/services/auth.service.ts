@@ -8,7 +8,7 @@ import NotFoundError from "../errors/not-found-error";
 const sigunUp = async (user: IUser) => {
   const existingUser = await User.findOne({ email: user.email });
   if (existingUser) {
-    throw new BadRequestError("Email in use");
+    throw new BadRequestError("Email in use", "email");
   }
   const newUser: UserDocument = await User.create(user);
 
