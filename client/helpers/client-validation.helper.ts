@@ -19,6 +19,10 @@ const validationMessages = {
       )
       .required("Password is required"),
   }),
+  signIn: Yup.object().shape({
+    email: Yup.string().required("Email is required"),
+    password: Yup.string().trim().required("Password is required"),
+  }),
 };
 
 export const clientValidation = {

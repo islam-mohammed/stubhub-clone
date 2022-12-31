@@ -14,13 +14,6 @@ import { Error } from "../../models/error";
 import { useRouter } from "next/router";
 import { clientValidation } from "../../helpers/client-validation.helper";
 
-const initialValues: User = {
-  email: "",
-  firstName: "",
-  lastName: "",
-  password: "",
-};
-
 interface PageProps {
   toggleForm: () => void;
 }

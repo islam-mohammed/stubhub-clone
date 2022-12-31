@@ -1,4 +1,3 @@
-import * as Yup from "yup";
 import { TextInput, Button, Spinner } from "flowbite-react";
 import classNames from "../../helpers/class-names.helper";
 import { MailIcon, LockClosedIcon } from "@heroicons/react/solid";
@@ -6,28 +5,44 @@ import LoginHeader from "./login-header";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import Login from "../../models/login";
-
-const initialValues = {
-  email: "",
-  password: "",
-};
+import { clientValidation } from "../../helpers/client-validation.helper";
+import getSWRCacheKey from "../../helpers/swr.helper";
+import { useSWRConfig } from "swr";
+import { userServcie } from "../../services/user.service";
+import { useRouter } from "next/router";
+import { Error } from "../../models/error";
 
 interface PageProps {
   toggleForm: () => void;
 }
 
 const SigninForm = ({ toggleForm }: PageProps) => {
-  const validationSchema = Yup.object().shape({
-    email: Yup.string().required("Email is required"),
-    password: Yup.string().trim().required("Password is required"),
-  });
-
+  const validationSchema = clientValidation.validationMessages.signIn;
   const formOptions = { resolver: yupResolver(validationSchema) };
-  const { register, handleSubmit, formState } = useForm<Login>(formOptions);
+  const { register, handleSubmit, formState, setError } =
+    useForm<Login>(formOptions);
   const { errors } = formState;
+  const { mutate } = useSWRConfig();
+  const router = useRouter();
 
-  function onSubmit(user: Login) {
-    console.log(user);
+  async function onSubmit(user: Login) {
+    try {
+      const result = await userServcie.signIn(user);
+      mutate(getSWRCacheKey().user, result);
+      router.push("/");
+    } catch (e: any) {
+      e.errors.forEach((error: Error) => {
+        if (error.field) {
+          setError(
+            error.field,
+            { message: error.message },
+            { shouldFocus: true }
+          );
+        } else {
+          setError("email", { message: error.message }, { shouldFocus: true });
+        }
+      });
+    }
   }
 
   return (
