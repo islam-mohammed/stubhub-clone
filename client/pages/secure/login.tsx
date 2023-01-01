@@ -1,11 +1,22 @@
 import { GetServerSideProps } from "next";
-import { useState } from "react";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import SigninForm from "../../components/forms/signin-form";
 import SignupForm from "../../components/forms/signup-form";
 import axiosServer from "../../helpers/axios.helper";
+import useUser from "../../hooks/useUser";
 import User from "../../models/user";
 
 const Login = () => {
+  const { user } = useUser();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user) {
+      router.push("/");
+    }
+  }, []);
+
   const [formType, setFormType] = useState<"signin" | "signup" | "forget">(
     "signin"
   );
@@ -25,18 +36,18 @@ const Login = () => {
 
 export default Login;
 
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const { data: user } = await axiosServer(req).get("/api/users/current");
+// export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+//   const { data } = await axiosServer(req).get("/api/users/current");
 
-  if (user) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
-  return {
-    props: {},
-  };
-};
+//   if (data.currentUser) {
+//     return {
+//       redirect: {
+//         destination: "/",
+//         permanent: false,
+//       },
+//     };
+//   }
+//   return {
+//     props: {},
+//   };
+// };

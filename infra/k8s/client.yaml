@@ -17,8 +17,8 @@ spec:
           image: islam1978/stubhub-client
           resources:
             limits:
-              memory: "512Mi"
-              cpu: "2000m"
+              memory: "2056Mi"
+              cpu: "4000m"
 ---
 apiVersion: v1
 kind: Service

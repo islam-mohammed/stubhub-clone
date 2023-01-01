@@ -18,6 +18,7 @@ const CurrentUser = (req: Request, res: Response, next: NextFunction) => {
     const currentUser = verify(req.session.jwt, process.env.JWT_SECRET!);
     req.currentUser = currentUser;
   } catch (error) {
+    req.currentUser = null;
     return next();
   }
 

@@ -2,22 +2,27 @@ import Head from "next/head";
 import { ReactNode } from "react";
 import Footer from "./footer";
 import Navbar from "./nav";
-import { useSWRConfig } from "swr";
 import { useRouter } from "next/router";
-import getSWRCacheKey from "../../helpers/swr.helper";
 import { userServcie } from "../../services/user.service";
+import axiosHelper from "../../helpers/axios.helper";
+import { AppContext } from "next/app";
+import { useSWRConfig } from "swr";
+import { GetServerSideProps } from "next";
+import User from "../../models/user";
+import axios from "axios";
 type Props = {
   children?: ReactNode;
   title?: string;
+  user?: User;
 };
 
-export default function Layout({ children, title = "Stub Hub | Home" }: Props) {
+const Layout = ({ children, user, title = "Stub Hub | Home" }: Props) => {
   const { mutate } = useSWRConfig();
   const router = useRouter();
   const handleSignout = async () => {
     try {
       await userServcie.signOut();
-      mutate(getSWRCacheKey().user, null);
+      mutate(null);
       router.push("/");
     } catch (err) {
       console.log(err);
@@ -39,4 +44,6 @@ export default function Layout({ children, title = "Stub Hub | Home" }: Props) {
       </div>
     </div>
   );
-}
+};
+
+export default Layout;
