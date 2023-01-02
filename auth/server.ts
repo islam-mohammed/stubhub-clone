@@ -4,6 +4,9 @@ import dbConnect from "./src/services/db";
 if (!process.env.JWT_SECRET) {
   throw new Error("JWT_SECRET is not defined!");
 }
+if (!process.env.DB_URI) {
+  throw new Error("DB_URI is not defined!");
+}
 const server = http.createServer(app);
 async function startServer() {
   await dbConnect();
