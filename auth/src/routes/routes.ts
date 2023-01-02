@@ -1,9 +1,9 @@
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
 import { signIn, sigunUp } from "../services/auth.service";
-import RequestValidator from "../middlewares/request-validator";
-import CurrentUser from "../middlewares/current-user";
-import Auth from "../middlewares/auth";
+import { RequestValidator } from "@stubhubdev/common";
+import {} from "@stubhubdev/common";
+import Auth from "@stubhubdev/common";
 const authRouter = express.Router();
 
 authRouter.post(
