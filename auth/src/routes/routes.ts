@@ -1,9 +1,9 @@
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
-import { signIn, sigunUp } from "../services/auth.service";
-import { RequestValidator } from "@stubhubdev/common";
+import { requestValidator, currentUser, auth } from "@stubhubdev/common";
 import {} from "@stubhubdev/common";
 import Auth from "@stubhubdev/common";
+import { signIn, sigunUp } from "../services/auth.service";
 const authRouter = express.Router();
 
 authRouter.post(
@@ -19,7 +19,7 @@ authRouter.post(
         "Password must at least contains 8 characters, 1 upper case, 1 lower case, and 1 number"
       ),
   ],
-  RequestValidator,
+  requestValidator,
   async (req: Request, res: Response) => {
     const jwtUser = await sigunUp(req.body);
     req.session = {
@@ -40,7 +40,7 @@ authRouter.post(
       .isEmpty()
       .withMessage("Please enter your password"),
   ],
-  RequestValidator,
+  requestValidator,
   async (req: Request, res: Response) => {
     const { email, password } = req.body;
     const jwtUser = await signIn(email, password);
@@ -51,7 +51,7 @@ authRouter.post(
   }
 );
 
-authRouter.get("/current", CurrentUser, Auth, (req: Request, res: Response) => {
+authRouter.get("/current", currentUser, auth, (req: Request, res: Response) => {
   return res.json({
     currentUser: req.currentUser,
   });

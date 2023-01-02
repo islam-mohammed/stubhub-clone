@@ -10,14 +10,14 @@ import { useSWRConfig } from "swr";
 import { GetServerSideProps } from "next";
 import User from "../../models/user";
 import axios from "axios";
+import useUser from "../../hooks/useUser";
 type Props = {
   children?: ReactNode;
   title?: string;
-  user?: User;
 };
 
-const Layout = ({ children, user, title = "Stub Hub | Home" }: Props) => {
-  const { mutate } = useSWRConfig();
+const Layout = ({ children, title = "Stub Hub | Home" }: Props) => {
+  const { mutate } = useUser();
   const router = useRouter();
   const handleSignout = async () => {
     try {

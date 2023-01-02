@@ -1,9 +1,8 @@
 import { sign } from "jsonwebtoken";
 import { UserDocument } from "../models/user.model";
 import User, { IUser } from "../models/user.model";
-import BadRequestError from "../errors/bad-request-error";
 import { compare } from "bcrypt";
-import NotFoundError from "../errors/not-found-error";
+import { BadRequestError, NotFoundError } from "@stubhubdev/common";
 
 const sigunUp = async (user: IUser) => {
   const existingUser = await User.findOne({ email: user.email });

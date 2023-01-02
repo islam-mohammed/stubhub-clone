@@ -5,8 +5,7 @@ import { json } from "body-parser";
 import helmet from "helmet";
 import cookieSession from "cookie-session";
 import authRouter from "./src/routes/routes";
-import errorHandler from "./src/middlewares/error-handler";
-import NotFoundError from "./src/errors/not-found-error";
+import { errorHandler, NotFoundError } from "@stubhubdev/common";
 
 const app = express();
 app.use(json());
