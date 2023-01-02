@@ -1,61 +1,55 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth-depl
+  name: tickets-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: auth
+      app: tickets
   template:
     metadata:
       labels:
-        app: auth
+        app: tickets
     spec:
       containers:
-        - name: auth
-          image: islam1978/auth
+        - name: tickets
+          image: islam1978/stubhub-tickets
           env:
-            - name: JWT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: jwq-secret
-                  key: JWT_KEY
             - name: DB_URI
-              value: "mongodb://auth-db-srv/auth"
+              value: "mongodb://tickets-db-srv/tickets"
           resources:
             limits:
-              memory: "512Mi"
-              cpu: "1000m"
+              memory: "1024Mi"
+              cpu: "2000m"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth-srv
+  name: tickets-srv
 spec:
   selector:
-    app: auth
+    app: tickets
   ports:
-    - port: 3000
-      targetPort: 3000
+    - port: 4000
+      targetPort: 4000
       protocol: TCP
-      name: auth
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth-db-depl
+  name: tickets-db-depl
 spec:
   selector:
     matchLabels:
-      app: auth-db
+      app: tickets-db
   template:
     metadata:
       labels:
-        app: auth-db
+        app: tickets-db
     spec:
       containers:
-        - name: auth-db
+        - name: tickets-db
           image: mongo
           resources:
             limits:
@@ -65,10 +59,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth-db-srv
+  name: tickets-db-srv
 spec:
   selector:
-    app: auth-db
+    app: tickets-db
   ports:
     - port: 27017
       targetPort: 27017
