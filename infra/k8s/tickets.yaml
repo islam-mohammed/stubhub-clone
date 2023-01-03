@@ -18,6 +18,11 @@ spec:
           env:
             - name: DB_URI
               value: "mongodb://tickets-db-srv/tickets"
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: jwq-secret
+                  key: JWT_KEY
           resources:
             limits:
               memory: "1024Mi"
@@ -31,8 +36,8 @@ spec:
   selector:
     app: tickets
   ports:
-    - port: 4000
-      targetPort: 4000
+    - port: 3000
+      targetPort: 3000
       protocol: TCP
 ---
 apiVersion: apps/v1
