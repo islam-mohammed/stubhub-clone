@@ -52,7 +52,7 @@ authRouter.post(
 );
 
 authRouter.get("/current", currentUser, auth, (req: Request, res: Response) => {
-  return res.json({
+  return res.status(200).json({
     currentUser: req.currentUser,
   });
 });
