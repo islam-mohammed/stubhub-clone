@@ -5,6 +5,9 @@ import dbConnect from "./services/db.service";
 if (!process.env.DB_URI) {
   throw new Error("DB_URI is not defined!");
 }
+if (!process.env.JWT_SECRET) {
+  throw new Error("DB_URI is not defined!");
+}
 
 const server = http.createServer(app);
 
