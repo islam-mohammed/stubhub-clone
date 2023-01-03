@@ -4,11 +4,12 @@ import { MongoMemoryServer } from "mongodb-memory-server";
 import { sign } from "jsonwebtoken";
 
 declare global {
-  var getAuthCookie: () => Promise<string[]>;
+  var getAuthCookie: () => string[];
 }
 
 let mongo: MongoMemoryServer;
 beforeAll(async () => {
+  process.env.JWT_SECRET = "islammohammed";
   mongo = await MongoMemoryServer.create();
   const mongoUri = mongo.getUri();
   await mongoose.connect(mongoUri);
@@ -26,7 +27,7 @@ afterAll(async () => {
   await mongoose.connection.close();
 });
 
-global.getAuthCookie = async () => {
+global.getAuthCookie = () => {
   const jwt = sign(
     {
       email: "test@test.com",
@@ -34,9 +35,9 @@ global.getAuthCookie = async () => {
       firstName: "fname",
       lastName: "lname",
     },
-    process.env.JWT_KEY!
+    process.env.JWT_SECRET!
   );
 
   const session = JSON.stringify({ jwt });
-  return [`express:sess=${Buffer.from(session).toString("base64")}`];
+  return [`session=${Buffer.from(session).toString("base64")}`];
 };
