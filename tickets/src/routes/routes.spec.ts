@@ -18,8 +18,45 @@ describe("Post new ticket test", () => {
     expect(res.status).not.toEqual(401);
   });
 
-  it("Should return status code of 200 if the tickets is added", () => {});
-  it("Should return error if invalid title is provided", () => {});
-  it("Should return error if invalid price is provided", () => {});
+  it("Should return error if no title is provided", async () => {
+    await request(app)
+      .post("/api/tickets")
+      .set("Cookie", getAuthCookie())
+      .send({
+        title: "",
+        price: "15.5",
+      })
+      .expect(400);
+  });
+  it("Should return error if no title is not provided", async () => {
+    await request(app)
+      .post("/api/tickets")
+      .set("Cookie", getAuthCookie())
+      .send({
+        title: "title",
+        price: "",
+      })
+      .expect(400);
+  });
+
+  it("Should return error if invalid price is provided", async () => {
+    await request(app)
+      .post("/api/tickets")
+      .set("Cookie", getAuthCookie())
+      .send({
+        title: "title",
+        price: "true",
+      })
+      .expect(400);
+  });
+  it("Should return status code of 201 if the tickets is added", async () => {
+    await request(app)
+      .post("/api/tickets")
+      .set("Cookie", getAuthCookie())
+      .send({
+        title: "title",
+        price: 15.5,
+      })
+      .expect(201);
+  });
 });
-``;
