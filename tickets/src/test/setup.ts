@@ -30,6 +30,7 @@ afterAll(async () => {
 global.getAuthCookie = () => {
   const jwt = sign(
     {
+      id: 20000,
       email: "test@test.com",
       password: "newPa$$0rd",
       firstName: "fname",
