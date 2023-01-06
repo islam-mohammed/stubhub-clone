@@ -28,9 +28,10 @@ afterAll(async () => {
 });
 
 global.getAuthCookie = () => {
+  const userId = new mongoose.Types.ObjectId().toHexString();
   const jwt = sign(
     {
-      id: 20000,
+      id: userId,
       email: "test@test.com",
       password: "newPa$$0rd",
       firstName: "fname",
