@@ -4,31 +4,56 @@ deploy:
   kubectl:
     manifests:
       - ./infra/k8s/*
+      - ./infra/k8s-dev/*
 build:
   local:
     push: false
   artifacts:
-    - image: islam1978/auth
+    - image: cygnetops/auth
       context: auth
       docker:
         dockerfile: Dockerfile
       sync:
         manual:
-          - dest: .
-            src: "**/*.ts"
-    - image: islam1978/stubhub-client
+          - src: 'src/**/*.ts'
+            dest: .
+    - image: cygnetops/ticketing-client
       context: client
       docker:
         dockerfile: Dockerfile
       sync:
         manual:
-          - dest: .
-            src: "**/*.{ts,tsx,scss}"
-    - image: islam1978/stubhub-tickets
+          - src: '**/*.js'
+            dest: .
+    - image: cygnetops/tickets
       context: tickets
       docker:
         dockerfile: Dockerfile
       sync:
         manual:
-          - dest: .
-            src: "**/*.{ts,tsx,scss}"
+          - src: 'src/**/*.ts'
+            dest: .
+    - image: cygnetops/orders
+      context: orders
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
+    - image: cygnetops/expiration
+      context: expiration
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
+    - image: cygnetops/payments
+      context: payments
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .

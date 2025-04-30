@@ -1,18 +1,29 @@
-import request from "supertest";
-import mongoose from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
-import app from "../../app";
+import mongoose from "mongoose";
+import request from "supertest";
+import { app } from "../app";
 
-let mongo: MongoMemoryServer;
+declare global {
+  var signin: () => Promise<string[]>;
+}
+
+let mongo: any;
 beforeAll(async () => {
-  process.env.JWT_SECRET = "any";
-  mongo = await MongoMemoryServer.create();
-  const mongoUri = mongo.getUri();
-  await mongoose.connect(mongoUri);
+  process.env.JWT_KEY = "";
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
+  mongo = new MongoMemoryServer();
+  const mongoUri = await mongo.getUri();
+
+  await mongoose.connect(mongoUri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
 });
 
 beforeEach(async () => {
   const collections = await mongoose.connection.db.collections();
+
   for (let collection of collections) {
     await collection.deleteMany({});
   }
@@ -23,21 +34,19 @@ afterAll(async () => {
   await mongoose.connection.close();
 });
 
-global.getAuthCookie = async () => {
+global.signin = async () => {
   const email = "test@test.com";
-  const password = "newPa$$0rd";
-  const firstName = "fname";
-  const lastName = "lname";
+  const password = "password";
 
   const response = await request(app)
     .post("/api/users/signup")
     .send({
       email,
       password,
-      firstName,
-      lastName,
     })
     .expect(201);
+
   const cookie = response.get("Set-Cookie");
+
   return cookie;
 };

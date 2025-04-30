@@ -1,13 +1,6 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  experimental: {
-    appDir: true,
+module.exports = {
+  webpackDevMiddleware: (config) => {
+    config.watchOptions.poll = 300;
+    return config;
   },
-  images: {
-    domains: ["images.unsplash.com"],
-  },
-  reactStrictMode: true,
-  swcMinify: true,
 };
-
-module.exports = nextConfig;
